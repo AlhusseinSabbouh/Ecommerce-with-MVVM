@@ -1,12 +1,15 @@
 import 'package:ecommerce_with_mvvm/constant.dart';
+import 'package:ecommerce_with_mvvm/view/auth/second_page.dart';
 import 'package:ecommerce_with_mvvm/view/widget/custom_button.dart';
 import 'package:ecommerce_with_mvvm/view/widget/custom_social_buttom.dart';
 import 'package:ecommerce_with_mvvm/view/widget/custom_text.dart';
 import 'package:ecommerce_with_mvvm/view/widget/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class HomePageView extends StatelessWidget {
-  const HomePageView({Key? key}) : super(key: key);
+class LogInView extends StatelessWidget {
+  final String route = '/login';
+  const LogInView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +75,11 @@ class HomePageView extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            CustomButton(text: "SIGN IN", onPressed: () {}),
+            CustomButton(
+                text: "SIGN IN",
+                onPressed: () {
+                  Get.toNamed(SecondPage().route);
+                }),
             SizedBox(
               height: 30,
             ),
