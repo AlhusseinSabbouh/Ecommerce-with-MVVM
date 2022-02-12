@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LogInViewModel extends GetxController {
+class AuthViewModel extends GetxController {
   User? _use;
   Rxn<User> _user = Rxn<User>();
   GetStorage token = GetStorage();
@@ -18,8 +18,6 @@ class LogInViewModel extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("hereee");
-    print(_user.value?.email);
     _user.bindStream(_firebaseAuth.authStateChanges());
   }
 
@@ -30,19 +28,36 @@ class LogInViewModel extends GetxController {
       GoogleSignInAuthentication googleAuth = await _googleUser!.authentication;
       OAuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-      UserCredential user =
-          await _firebaseAuth.signInWithCredential(credential);
+
+      await _firebaseAuth.signInWithCredential(credential);
+      token.write("email", "true");
+      Get.to(HomeView());
     } catch (e) {
       print(e);
     }
   }
 
-  SignInWithEmailAndPasswordMethod() async {
+  signInWithEmailAndPasswordMethod() async {
     try {
       print("password is " + password);
       print("email is " + email);
 
       await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      token.write("email", "true");
+      Get.offAll(HomeView());
+    } catch (e) {
+      print(e.toString());
+      print(e);
+      // Get.snackbar("Error Login Accoun", msg,
+      //     snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  createAccountWithEmailAndPassword() async {
+    try {
+      await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
 
       token.write("email", "true");

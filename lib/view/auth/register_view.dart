@@ -1,16 +1,14 @@
-import 'package:ecommerce_with_mvvm/constant.dart';
-import 'package:ecommerce_with_mvvm/core/view_model/auth_view_model.dart';
-import 'package:ecommerce_with_mvvm/view/auth/second_page.dart';
-import 'package:ecommerce_with_mvvm/view/widget/custom_button.dart';
-import 'package:ecommerce_with_mvvm/view/widget/custom_social_buttom.dart';
-import 'package:ecommerce_with_mvvm/view/widget/custom_text.dart';
-import 'package:ecommerce_with_mvvm/view/widget/custom_text_form_field.dart';
+import 'package:ecommerce_with_mvvm/view/auth/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'register_view.dart';
+import '../../core/view_model/auth_view_model.dart';
+import '../widget/custom_button.dart';
 
-class LogInView extends GetWidget<AuthViewModel> {
+import '../widget/custom_text.dart';
+import '../widget/custom_text_form_field.dart';
+
+class SingUpViewModel extends GetWidget<AuthViewModel> {
   final String route = '/login';
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -20,7 +18,16 @@ class LogInView extends GetWidget<AuthViewModel> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.offAll(LogInView());
+          },
+        ),
       ),
       body: ListView(children: [
         Padding(
@@ -33,31 +40,30 @@ class LogInView extends GetWidget<AuthViewModel> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                      text: "Welcome,",
+                      text: "SignUp,",
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(SingUpViewModel());
-                      },
-                      child: CustomText(
-                        text: "Sing Up",
-                        fontSize: 18,
-                        color: mainColor,
-                      ),
-                    )
                   ],
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                CustomText(
-                    text: "Sign in to continue",
-                    fontSize: 14,
-                    color: Colors.grey.shade800),
                 SizedBox(
                   height: 35,
+                ),
+                CustonTextFormField(
+                    text: "Name",
+                    hintText: "enter your name",
+                    onSaved: (value) {
+                      controller.name = value!;
+                    },
+                    validator: (value) {
+                      if (value == null) print("error");
+                      return "";
+                    }),
+                SizedBox(
+                  height: 30,
                 ),
                 CustonTextFormField(
                     text: "Email",
@@ -85,47 +91,20 @@ class LogInView extends GetWidget<AuthViewModel> {
                 SizedBox(
                   height: 20,
                 ),
-                CustomText(
-                  text: "Forget password",
-                  fontSize: 14,
-                  alignment: Alignment.topRight,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
                 CustomButton(
-                    text: "SIGN IN",
+                    text: "SIGN UP",
                     onPressed: () {
                       _formKey.currentState?.save();
                       print("password is " + controller.password);
                       print("email is " + controller.email);
                       print(_formKey.currentState!.validate());
                       if (!_formKey.currentState!.validate()) {
-                        controller.signInWithEmailAndPasswordMethod();
+                        controller.createAccountWithEmailAndPassword();
                       }
                     }),
                 SizedBox(
                   height: 30,
                 ),
-                CustomText(
-                  text: "-OR-",
-                  fontSize: 20,
-                  alignment: Alignment.center,
-                ),
-                CustonSocialButtom(
-                    image: "googleIcon.png",
-                    onPressed: () {
-                      print("he pressed log in with google");
-                      controller.googleSignInMethod();
-                    },
-                    text: "Sign in with google"),
-                SizedBox(
-                  height: 10,
-                ),
-                CustonSocialButtom(
-                    image: "facbookIcon.png",
-                    onPressed: () {},
-                    text: "Sign with facebook")
               ],
             ),
           ),
