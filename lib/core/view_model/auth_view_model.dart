@@ -1,3 +1,5 @@
+import 'package:ecommerce_with_mvvm/core/services/firestore_user.dart';
+import 'package:ecommerce_with_mvvm/model/user_model.dart';
 import 'package:ecommerce_with_mvvm/view/auth/second_page.dart';
 import 'package:ecommerce_with_mvvm/view/home_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,7 +31,9 @@ class AuthViewModel extends GetxController {
       OAuthCredential credential = GoogleAuthProvider.credential(
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
 
-      await _firebaseAuth.signInWithCredential(credential);
+      await _firebaseAuth.signInWithCredential(credential).then((user) async {
+        saveUser(user);
+      });
       token.write("email", "true");
       Get.to(HomeView());
     } catch (e) {
@@ -57,8 +61,11 @@ class AuthViewModel extends GetxController {
 
   createAccountWithEmailAndPassword() async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((user) async {
+        saveUser(user);
+      });
 
       token.write("email", "true");
       Get.offAll(HomeView());
@@ -68,5 +75,16 @@ class AuthViewModel extends GetxController {
       // Get.snackbar("Error Login Accoun", msg,
       //     snackPosition: SnackPosition.BOTTOM);
     }
+  }
+
+  saveUser(UserCredential user) async {
+    UserModel userModel = UserModel(
+      email: user.user!.email,
+      pic: "",
+      userId: user.user!.uid,
+      name: user.user!.displayName == null ? name : user.user!.displayName,
+    );
+
+    await FireStoreUser().addUserToFireStore(userModel);
   }
 }

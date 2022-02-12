@@ -30,6 +30,7 @@ dependencies:
   get:
   dio: ^4.0.1
   get_storage:
+  cloud_firestore: ^3.1.8
  
   firebase_core:
   firebase_auth:
