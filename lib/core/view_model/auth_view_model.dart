@@ -1,11 +1,13 @@
 import 'package:ecommerce_with_mvvm/core/services/firestore_user.dart';
 import 'package:ecommerce_with_mvvm/model/user_model.dart';
 import 'package:ecommerce_with_mvvm/view/auth/second_page.dart';
-import 'package:ecommerce_with_mvvm/view/home_view.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../view/home pages/home_view.dart';
 
 class AuthViewModel extends GetxController {
   User? _use;
