@@ -18,8 +18,11 @@ class CustomText extends StatelessWidget {
     return Container(
       child: Text(
         text,
-        style:
-            TextStyle(fontSize: fontSize, color: color, fontWeight: fontWeight),
+        style: TextStyle(
+            fontSize: fontSize,
+            color: color,
+            fontWeight: fontWeight,
+            overflow: TextOverflow.ellipsis),
       ),
       alignment: alignment,
     );

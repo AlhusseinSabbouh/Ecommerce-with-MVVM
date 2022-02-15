@@ -1,6 +1,9 @@
 import 'package:ecommerce_with_mvvm/constant.dart';
+import 'package:ecommerce_with_mvvm/core/view_model/control_view_model.dart';
+import 'package:ecommerce_with_mvvm/core/view_model/home_view_model.dart';
 import 'package:ecommerce_with_mvvm/view/widget/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class HomeView extends StatelessWidget {
   List<String> categoryName = <String>['smen', 's', 's', 's', 's', 's'];
@@ -10,7 +13,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: ListView(children: [
         Padding(
-          padding: EdgeInsets.only(top: 100, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 70, left: 20, right: 20),
           child: Column(
             children: [
               _seachTextFormField(),
@@ -32,7 +35,14 @@ class HomeView extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              _bestSellingList()
+              _bestSellingList(),
+              GetBuilder<HomeViewModel>(
+                builder: (controller) => ElevatedButton(
+                    onPressed: () {
+                      controller.getAllCategories();
+                    },
+                    child: Text("fetch data")),
+              )
             ],
           ),
         ),
@@ -57,40 +67,47 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _categoryList() {
-    return Container(
-      height: 100,
-      child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(5),
-                  width: 60,
-                  height: 60,
-                  child: Image.asset(
-                    'assets/images/MenShoes.png',
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(90),
-                      color: Colors.grey.shade400),
-                ),
-                CustomText(text: categoryName[index], fontSize: 15)
-              ],
-            );
-          },
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              width: 20,
-            );
-          },
-          itemCount: categoryName.length),
+    return GetBuilder<HomeViewModel>(
+      init: HomeViewModel(),
+      builder: (controller) => controller.loading.value == true
+          ? CircularProgressIndicator()
+          : Container(
+              height: 100,
+              child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          width: 60,
+                          height: 60,
+                          child: Image.network(
+                            controller.categories[index].image,
+                          ),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(90),
+                              color: Colors.grey.shade400),
+                        ),
+                        CustomText(
+                            text: controller.categories[index].name,
+                            fontSize: 15)
+                      ],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return SizedBox(
+                      width: 20,
+                    );
+                  },
+                  itemCount: controller.categoryLength),
+            ),
     );
   }
 
   Widget _bestSellingList() {
     return Container(
-      height: 290,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       ),
@@ -99,7 +116,7 @@ class HomeView extends StatelessWidget {
           itemBuilder: (context, index) {
             return Container(
               decoration: BoxDecoration(color: Colors.grey.shade200),
-              width: 170,
+              width: MediaQuery.of(context).size.width * 0.3,
               child: Column(
                 children: [
                   SizedBox(
@@ -107,29 +124,27 @@ class HomeView extends StatelessWidget {
                   ),
                   Image.asset(
                     'assets/images/watch.png',
-                    height: 200,
-                    width: 220,
+                    height: 160,
+                    width: MediaQuery.of(context).size.width * 0.3,
                     fit: BoxFit.cover,
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Expanded(
-                    child: CustomText(
-                      text: "BeoPlay Speaker sdsd dsfsf",
-                      fontSize: 22,
-                    ),
+                  CustomText(
+                    text: "BeoPlay Spe sdsd dsfsf",
+                    fontSize: 20,
                   ),
-                  Expanded(
-                    child: CustomText(
-                      text: "Tag hour fdfdg dfsf dsf",
-                      fontSize: 20,
-                      color: Colors.grey.shade500,
-                    ),
+                  SizedBox(
+                    height: 4,
+                  ),
+                  CustomText(text: "Tag Hour fdsf sdfsf", fontSize: 17),
+                  SizedBox(
+                    height: 4,
                   ),
                   CustomText(
                     text: "\$750",
-                    fontSize: 20,
+                    fontSize: 17,
                     color: mainColor,
                   ),
                 ],
